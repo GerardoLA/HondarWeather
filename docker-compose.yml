@@ -1,0 +1,71 @@
+version: "3.1"
+services:
+  # Configuración del contenedor Apache 1, todos los Apaches serán iguales cambiando el número
+  apache1:
+    image: httpd:latest
+    restart: always
+    volumes: 
+    - ./frontEnd:/usr/local/apache2/htdocs/  # Asocia el archivo index.html al contenedor Apache 1
+    ports:
+    - "8080:80"  # Mapea el puerto 8080 del host al puerto 80 del contenedo
+
+    # Configuración del contenedor Nginx
+  nginx:
+    image: nginx
+    restart: always
+    volumes: 
+    - ./nginx.conf:/etc/nginx/nginx.conf  # Asocia el archivo default.conf al contenedor Nginx
+    ports:
+    - "8081:80"  # Mapea el puerto 80 del host al puerto 80 del contenedor
+   
+ 
+  HondarWeather:
+    image: docker.io/bitnami/laravel:10
+    ports:
+      - '8085:8000'
+    environment:
+      - DB_HOST=185.60.40.210
+      - DB_PORT=3306
+      - DB_USERNAME=Gerardo
+      - DB_PASSWORD=12345678
+      - DB_DATABASE=Gerardo
+    volumes:
+      - './datosProyecto/HondarWeather:/app'
+     
+     
+  HondarWeather_alimentadorDatos:
+    image: docker.io/bitnami/laravel:10
+    ports:
+      - '8086:8000'
+    environment:
+      - DB_HOST=185.60.40.210
+      - DB_PORT=3306
+      - DB_USERNAME=Gerardo
+      - DB_PASSWORD=12345678
+      - DB_DATABASE=Gerardo
+    volumes:
+      - './datosProyecto/HondarWeather_alimentadorDatos:/app'
+
+  # mysql:
+  #   image: mysql:latest
+  #   environment:
+  #     MYSQL_DATABASE: 'ProyectoFinal'
+  #     MYSQL_USER: 'usuario'
+  #     MYSQL_PASSWORD: 'password'
+  #     MYSQL_ROOT_PASSWORD: 'password'
+  #   ports:
+  #     - '3306:3306'
+  #   expose:
+  #     - '3306'
+  #   volumes:
+  #     - ./datosProyecto/mysql/:/var/lib/mysql
+
+  # phpmyadmin:
+  #       image: 'phpmyadmin:latest'
+  #       ports:
+  #           - 8084:80
+  #       environment:
+  #           - PMA_ARBITRARY=1
+
+# volumes:
+#   my-db:

@@ -1,0 +1,50 @@
+h3{
+    text-align: center;
+}
+.navbar{
+    background:linear-gradient(to left,rgb(44,132, 203),rgb(19, 39, 54));
+}
+.nav-link{
+    color: white;
+}
+#mapid { 
+    height: 563px;
+    width:80%;
+    border-radius: 8%;
+    box-shadow: 5px 5px 10px 1px rgba(5, 5, 10, 0.6) ;
+}
+#PanelMet{   
+   
+    width:80%;
+}
+#containerMap,#contPanelMet,#contIconos{
+    display: flex;
+    justify-content: center;  
+}
+
+#PanelMet{
+    height: AUTO;
+    background-color: lightgray;/* El color del mar del mapa rgb(170,211, 223)*/
+    margin-top: 0.4vh;
+    padding: 2%;
+    overflow: auto;
+    border-radius: 30px;
+}
+
+.card-deck {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  box-shadow: 2px 2px 2px 1px rgba(5, 5, 10, 0.6) ;
+  margin-bottom: 10px;
+  
+}
+.card{
+    box-shadow: 5px 5px 10px 1px rgba(5, 5, 10, 0.6) ;  
+    margin: 2%;
+    width: 290px;
+}
+
+img{
+    width: 50px;
+}

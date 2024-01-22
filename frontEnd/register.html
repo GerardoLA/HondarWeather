@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styleLoginPropio.css">
+</head>
+
+<body>
+    <form class="form" id="register">
+        <h2 class="form_title">Inicia Sesión</h2>
+        <p class="form_paragraph">¿Aún no tienes cuenta?<a href="register.html" class="form_link">Entra aquí</a></p>
+
+        <div class="form_container">
+            <div class="form_group">
+                <input type="email" name="email" id="email" class="form_input" placeholder=" ">
+                <label for="email" class="form_label">Email</label>
+                <span class="form_line"></span>
+            </div>
+            <div class="form_group">
+                <input type="user" name="nombre" id="nombre" class="form_input" placeholder=" ">
+                <label for="user" class="form_label">Usuario</label>
+                <span class="form_line"></span>
+            </div>
+            <div class="form_group">
+                <input type="password" name="password" id="password" class="form_input" placeholder=" ">
+                <label for="password" class="form_label">Password</label>
+                <span class="form_line"></span>
+            </div>
+            <div class="form_group">
+                <input type="password" name="confirmpassword" id="confirmpassword" class="form_input" placeholder=" ">
+                <label for="password" class="form_label">Confirma_Password</label>
+                <span class="form_line"></span>
+            </div>
+
+            <input type="submit" value="Registrar" class="form_submit">
+
+        </div>
+
+
+        <form>
+            <script>
+                let formRegistrar = document.getElementById('register')
+                formRegistrar.addEventListener('submit', event => {
+                    event.preventDefault()
+                    //llamada a la funcion
+                })
+
+                function registrar() {
+                    let data = {
+                        name: document.getElementById("nombre").value,
+                        email: document.getElementById("email").value,
+                        password: document.getElementById("password").value,
+                        c_password: document.getElementById("confirmpassword").value
+                    }
+                    let config = {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    }
+
+                    fetch('http://localhost:8085/api/register',config)
+                        .then(response =>{
+                            if(!response.ok){
+                                throw new Error("La solicitud de registro no se pudo completar correctamente.");
+                            }
+
+                            return response.json()
+                        })
+                        .then()
+                }
+
+            </script>
+</body>
+
+</html>
