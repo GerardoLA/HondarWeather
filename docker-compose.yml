@@ -7,7 +7,7 @@ services:
     volumes: 
     - ./frontEnd:/usr/local/apache2/htdocs/  # Asocia el archivo index.html al contenedor Apache 1
     ports:
-    - "8080:80"  # Mapea el puerto 8080 del host al puerto 80 del contenedo
+    - "8083:80"  # Mapea el puerto 8080 del host al puerto 80 del contenedo
 
     # Configuración del contenedor Nginx
   nginx:
