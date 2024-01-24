@@ -15,40 +15,40 @@
 
         <div class="form_container">
             <div class="form_group">
-                <input type="email" name="email" id="email" class="form_input" placeholder=" ">
-                <label for="email" class="form_label">Email</label>
-                <span class="form_line"></span>
-            </div>
-            <div class="form_group">
-                <input type="user" name="nombre" id="nombre" class="form_input" placeholder=" ">
+                <input type="user" name="nombre" id="nombre" class="form_input" placeholder=" " value="zipi">
                 <label for="user" class="form_label">Usuario</label>
                 <span class="form_line"></span>
             </div>
             <div class="form_group">
-                <input type="password" name="password" id="password" class="form_input" placeholder=" ">
+                <input type="email" name="email" id="email" class="form_input" placeholder=" " value="zipi@latia.com">
+                <label for="email" class="form_label">Email</label>
+                <span class="form_line"></span>
+            </div>
+
+            <div class="form_group">
+                <input type="password" name="password" id="password" class="form_input" placeholder=" " value="12345678">
                 <label for="password" class="form_label">Password</label>
                 <span class="form_line"></span>
             </div>
             <div class="form_group">
-                <input type="password" name="confirmpassword" id="confirmpassword" class="form_input" placeholder=" ">
+                <input type="password" name="confirmpassword" id="confirmpassword" class="form_input" placeholder=" " value="12345678">
                 <label for="confirmpassword" class="form_label">Confirma_Password</label>
                 <span class="form_line"></span>
             </div>
 
-            <input type="submit" value="Registrar" class="form_submit">
+            <button type="submit" value="register" class="form_submit">Registrar</button>
 
         </div>
-
-
-        <form>
+    </form>
             <script>
                 let formRegistrar = document.getElementById('register')
                 formRegistrar.addEventListener('submit', event => {
                     event.preventDefault()
                     //llamada a la funcion
+                    register();
                 })
 
-                function registrar() {
+                function register() {
                     let data = {
                         name: document.getElementById("nombre").value,
                         email: document.getElementById("email").value,
@@ -69,9 +69,11 @@
                                 throw new Error("La solicitud de registro no se pudo completar correctamente.");
                             }
 
-                            return response.json()
+                            return response.json();
                         })
-                        .then()
+                        .then(data =>{
+                            console.log(data);
+                        });
                 }
 
             </script>
