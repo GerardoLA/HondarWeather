@@ -60,6 +60,7 @@
                     })
                     .then(data =>{
                         console.log(data);
+                        localStorage.setItem("token",data["data"]["token"]);
                     });
             }
 

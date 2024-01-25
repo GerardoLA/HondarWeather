@@ -44,18 +44,18 @@
               <li><a class="dropdown-item" href="#">Something else here</a></li>
             </ul>
           </li>
-         
+
         </ul>
         <form class="d-flex">
           <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
           <button class="btn btn-outline-light" type="submit">Search</button>
         </form>
         <!-- Botón de logout -->
-<ul class="navbar-nav ms-auto">
-  <li class="nav-item">
-    <a class="nav-link" href="#">Logout</a>
-  </li>
-</ul>
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Logout</a>
+          </li>
+        </ul>
 
       </div>
     </div>
@@ -65,69 +65,70 @@
     <div id="mapid"></div>
   </div>
   <h3>Iconos Arrastables</h3>
-    <div id="contIconos">
-      <img src="imagenes/viento.png" id="Viento" draggable="true">
-      <img src="imagenes/lluvia.png" id="Lluvia" draggable="true">
-      
-    </div>
+  <div id="contIconos">
+    <img src="imagenes/viento.png" id="Viento" draggable="true" alt="viento" ondragstart="drag(event)">
+    <img src="imagenes/lluvia.png" id="Lluvia" draggable="true" alt="lluvia" ondragstart="drag(event)">
+
+  </div>
   <h3>Lugares Destacados</h3>
   <div id="contPanelMet">
-    <div id="PanelMet" class="card-deck"></div>
+    <div id="PanelMet" class="card-deck"  ondrop="drop(event)" ondragover="allowDrop(event)"></div>
   </div>
   <script>
     // Estructura de datos para realizar un seguimiento de los lugares clicados
     const lugaresClicados = new Set(JSON.parse(localStorage.getItem('lugaresClicados')) || []);
 
     // Función para crear o eliminar la tarjeta
-    function gestionarTarjeta(nombre,temperatura,humedad) {
-      const panelMet = document.getElementById('PanelMet');
+    function gestionarTarjeta(nombre, temperatura, humedad) {
 
       // Verificar si la tarjeta ya existe
       const tarjetaExistente = document.querySelector(`.card[data-lugar="${nombre}"]`);
-
-      if (tarjetaExistente) {
+      if (tarjetaExistente.style.display == "none") {
         // Si la tarjeta existe, eliminarla
-        panelMet.removeChild(tarjetaExistente);
-        lugaresClicados.delete(nombre);
+        tarjetaExistente.style.display = "block"
       } else {
-        // Si la tarjeta no existe, crearla
-        const tarjeta = document.createElement('div');
-        tarjeta.classList.add('card');
-        tarjeta.dataset.lugar = nombre; // Agregar un atributo de datos para identificar la tarjeta por lugar
-        tarjeta.innerHTML = `
+        tarjetaExistente.style.display = "none"
+      }
+    }
+    function crearCards(nombre, temperatura, humedad) {
+      const panelMet = document.getElementById('PanelMet');
+
+      const tarjeta = document.createElement('div');
+      tarjeta.classList.add('card');
+      tarjeta.dataset.lugar = nombre; // Agregar un atributo de datos para identificar la tarjeta por lugar
+      tarjeta.innerHTML = `
           <div class="card-body">
-            <img src="./imagenes/lluvia.png">
-            <img src="./imagenes/mangas-de-viento.png">
+            <img src="./imagenes/lluvia.png" alt="lluvia">
+            <img src="./imagenes/mangas-de-viento.png" alt="viento">
             <h5 class="card-title">${nombre}</h5>
-            <p class="card-text"><img src="./imagenes/temperatura.png">${temperatura}ºC </p>
-            <p class="card-text"><img src="./imagenes/humedad.png"> ${humedad}% </p>
+            <p class="card-text"><img src="./imagenes/temperatura.png" alt="temperatura">${temperatura}ºC </p>
+            <p class="card-text"><img src="./imagenes/humedad.png" alt="humedad"> ${humedad}% </p>
             <a href="#" class="btn btn-primary">Botón</a>
           </div>
         `;
-        // Agregar la tarjeta al div PanelMet
-        panelMet.appendChild(tarjeta);
+        tarjeta.style.display="none"
+      // Agregar la tarjeta al div PanelMet
+      panelMet.appendChild(tarjeta);
 
-        // Agregar el lugar al conjunto de lugares clicados
-        lugaresClicados.add(nombre);
-      }
-        //Actualizar el localStorage de los lugares clicados
-        localStorage.setItem('lugaresClicados',JSON.stringify(Array.from(lugaresClicados)));
-      
+      // Agregar el lugar al conjunto de lugares clicados
+      lugaresClicados.add(nombre);
+      //Actualizar el localStorage de los lugares clicados
+      localStorage.setItem('lugaresClicados', JSON.stringify(Array.from(lugaresClicados)));
     }
 
     // Inicializar el mapa y establecer las coordenadas y el nivel de zoom
-    var map = L.map('mapid').setView([43.338, -1.788], 8);
+    var map = L.map('mapid').setView([43.30577097201333, -2.213991338082935], 10);
     var lugares = [ //Array con diferentes lugares
-      { "nombre": "Guetaria", "latitud": 43.30577097201333, "longitud": -2.213991338082935, "temperatura":16, "humedad": 88, "viento": 12, "lluvia":0.4 },
-      { "nombre": "Donosti", "latitud": 43.3183, "longitud": -1.9812, "temperatura":17, "humedad": 89, "viento": 16, "lluvia":0.8 },
-      { "nombre": "Pasaia", "latitud": 43.333902512171576, "longitud": -1.9322191644851154, "temperatura":17, "humedad": 92, "viento": 11, "lluvia":1.4 },
-      { "nombre": "Bilbo", "latitud": 43.26838, "longitud": -2.93408, "temperatura":15, "humedad": 94, "viento": 22, "lluvia":11.4 },
-      { "nombre": "Hondarribia", "latitud": 43.3682, "longitud": -1.7933, "temperatura":21, "humedad": 80, "viento": 0.2, "lluvia":0.0 }
+      { "nombre": "Guetaria", "latitud": 43.30577097201333, "longitud": -2.213991338082935, "temperatura": 16, "humedad": 88, "viento": 12, "lluvia": 0.4 },
+      { "nombre": "Donosti", "latitud": 43.3183, "longitud": -1.9812, "temperatura": 17, "humedad": 89, "viento": 16, "lluvia": 0.8 },
+      { "nombre": "Pasaia", "latitud": 43.333902512171576, "longitud": -1.9322191644851154, "temperatura": 17, "humedad": 92, "viento": 11, "lluvia": 1.4 },
+      { "nombre": "Bilbo", "latitud": 43.26838, "longitud": -2.93408, "temperatura": 15, "humedad": 94, "viento": 22, "lluvia": 11.4 },
+      { "nombre": "Hondarribia", "latitud": 43.3682, "longitud": -1.7933, "temperatura": 21, "humedad": 80, "viento": 0.2, "lluvia": 0.0 }
     ];
 
     lugares.forEach(lugar => { //Metodo for each para colocar un puntero en cada elemento del array
       var marker = L.marker([lugar.latitud, lugar.longitud]).addTo(map);
-
+      crearCards(lugar.nombre,lugar.temperatura,lugar.humedad)
       marker.bindTooltip(lugar.nombre, {
         permanent: false,    // El tooltip no será permanente
         direction: 'top',    // Se mostrará encima del marcador
@@ -138,25 +139,49 @@
         // Aquí lugar es accesible debido al ámbito de la clausura
         console.log(lugar.nombre);
         marker._icon.classList.add("huechange"); //Cambiar el color de los punteros
-        gestionarTarjeta(lugar.nombre,lugar.temperatura,lugar.humedad);
+        gestionarTarjeta(lugar.nombre, lugar.temperatura, lugar.humedad);
       });
     });
-  window.addEventListener('load', function () {
-  lugaresClicados.forEach(nombre => {
-    const lugar = lugares.find(l => l.nombre === nombre);
-    if (lugar) {
-      gestionarTarjeta(lugar.nombre, lugar.temperatura, lugar.humedad);
-    }
-  });
-});
-
+   
 
     // Añadir una capa de tiles de OpenStreetMap
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors'
     }).addTo(map);
+    function allowDrop(ev) {
+      ev.preventDefault();
+    }
 
-  
+    function drag(ev) {
+      ev.dataTransfer.setData("text", ev.target.id);
+      ev.dataTransfer.setData("tipo", ev.target.getAttribute('alt'));
+    }
+
+    function drop(ev) {
+      ev.preventDefault();
+      var data = ev.dataTransfer.getData("text");
+      var tipo = ev.dataTransfer.getData("tipo");
+      var draggedImage = document.getElementById(data);
+      var closestCard = ev.target.closest('.card');
+
+      if (closestCard) {
+        var cardBody = closestCard.querySelector('.card-body');
+        var nuevoParrafo = document.createElement('p');
+        nuevoParrafo.classList.add('card-text');
+        var nombreLugar = closestCard.dataset.lugar;
+        var lugarSeleccionado = lugares.find(lugar=> lugar.nombre ==nombreLugar);
+        if (tipo === 'lluvia') {
+          nuevoParrafo.innerHTML = `<img src="./imagenes/lluvia.png" alt="lluvia"> ${lugarSeleccionado.lluvia} mm`;
+        } else if (tipo === 'viento') {
+          nuevoParrafo.innerHTML = `<img src="./imagenes/mangas-de-viento.png" alt="viento"> ${lugarSeleccionado.viento} m/s`;
+        }
+
+       // Insertar el nuevo párrafo después de los párrafos existentes
+       var existingParrafos = cardBody.querySelectorAll('.card-text');
+        cardBody.insertBefore(nuevoParrafo, existingParrafos[existingParrafos.length - 1].nextSibling);
+      }
+    }
+
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
