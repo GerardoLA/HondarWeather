@@ -163,22 +163,31 @@
       var closestCard = ev.target.closest('.card');
 
       if (closestCard) {
-        var cardBody = closestCard.querySelector('.card-body');
-        var nuevoParrafo = document.createElement('p');
-        nuevoParrafo.classList.add('card-text');
-        var nombreLugar = closestCard.dataset.lugar;
-        var lugarSeleccionado = lugares.find(lugar=> lugar.nombre ==nombreLugar);
-        if (tipo === 'lluvia') {
-          nuevoParrafo.innerHTML = `<img src="./imagenes/lluvia.png" alt="lluvia"> ${lugarSeleccionado.lluvia} mm`;
-        } else if (tipo === 'viento') {
-          nuevoParrafo.innerHTML = `<img src="./imagenes/viento.png" alt="viento"> ${lugarSeleccionado.viento} m/s`;
-        }
+    // Verificar si ya existe un párrafo con el mismo tipo en la tarjeta
+    var cardBody = closestCard.querySelector('.card-body');
+    var existingParrafos = cardBody.querySelectorAll('.card-text');
+    var existeTipoEnTarjeta = Array.from(existingParrafos).some(parrafo => {
+      return parrafo.innerHTML.includes(`<img src="./imagenes/${tipo}.png" alt="${tipo}">`);
+    });
 
-       // Insertar el nuevo párrafo después de los párrafos existentes
-       var existingParrafos = cardBody.querySelectorAll('.card-text');
-        cardBody.insertBefore(nuevoParrafo, existingParrafos[existingParrafos.length - 1].nextSibling);
+    // Si no existe el mismo tipo en la tarjeta, se permite agregar el párrafo
+    if (!existeTipoEnTarjeta) {
+      var nuevoParrafo = document.createElement('p');
+      nuevoParrafo.classList.add('card-text');
+      var nombreLugar = closestCard.dataset.lugar;
+      var lugarSeleccionado = lugares.find(lugar => lugar.nombre == nombreLugar);
+
+      if (tipo === 'lluvia') {
+        nuevoParrafo.innerHTML = `<img src="./imagenes/lluvia.png" alt="lluvia"> ${lugarSeleccionado.lluvia} mm`;
+      } else if (tipo === 'viento') {
+        nuevoParrafo.innerHTML = `<img src="./imagenes/viento.png" alt="viento"> ${lugarSeleccionado.viento} m/s`;
       }
+
+      // Insertar el nuevo párrafo después de los párrafos existentes
+      cardBody.insertBefore(nuevoParrafo, existingParrafos[existingParrafos.length - 1].nextSibling);
     }
+  }
+}
 
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
