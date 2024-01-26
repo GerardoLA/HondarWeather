@@ -11,7 +11,7 @@
 <body>
     <form class="form" id="register">
         <h2 class="form_title">Registro</h2>
-        <p class="form_paragraph">¿Ya estás registrado?<a href="loginPropio.html" class="form_link">Entra aquí</a></p>
+        <p class="form_paragraph">¿Ya estás registrado?<a href="index.html" class="form_link">Entra aquí</a></p>
 
         <div class="form_container">
             <div class="form_group">
@@ -63,7 +63,7 @@
                         body: JSON.stringify(data)
                     }
 
-                    fetch('http://localhost:8085/api/register',config)
+                    fetch('http://10.10.17.164:8085/api/register',config)
                         .then(response =>{
                             if(!response.ok){
                                 throw new Error("La solicitud de registro no se pudo completar correctamente.");
@@ -72,7 +72,8 @@
                             return response.json();
                         })
                         .then(data =>{
-                            console.log(data);
+                            localStorage.setItem("token",data["data"]["token"]);
+                            window.location.assign("Principal.html");
                         });
                 }
 

@@ -20,6 +20,7 @@ use App\Http\Controllers\API\ProductController;
 Route::post('register', [RegisterController::class, 'register']);
 Route::post('login', [RegisterController::class, 'login']);
 
-Route::middleware('auth:api')->group( function () {
-    Route::resource('products', ProductController::class);
+Route::middleware('auth:api')->group(function () {  
+    Route::get('logout', [RegisterController::class, 'logout']);
+
 });
