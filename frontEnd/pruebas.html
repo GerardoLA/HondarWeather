@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualización de Datos</title>
+</head>
+<body>
+    <h2 id="txtPrimero">El tiempo en Alegría-Dulantzi (Araba/Álava)</h2>
+    <button type="button" onclick="CargarArchivoTexto()">Leer Archivo</button>
+
+    <div id="datosTiempo"></div>
+
+    <!--listado de provincias-->
+    <h2 id="txtSegundo">Listado de Provincias</h2>
+    <button type="button" onclick="CargarProvincias()">Cargar Provincias</button>
+    <div id="datosProvincias"></div>
+
+      <!--listado de municipios de guipuzcoa, sabiendo que gipuzkoa es codigoprov 20 y bizkaia 48-->
+      <h2 id="txtTercero">Listado de Municipios</h2>
+      <button type="button" onclick="CargarMunicipios()">Cargar municipios</button>
+      <div id="datosMunicipios"></div>
+    <script>
+        function CargarArchivoTexto() {
+            fetch("https://www.el-tiempo.net/api/json/v2/provincias/01/municipios/01001")
+            .then(response => {
+                    if (!response.ok) {
+                        throw new Error("La solicitud no se pudo completar correctamente.");
+                    }
+                    return response.json(); // Cambiado a response.json() para manejar datos JSON
+                })
+                .then(data => {
+                    // Lógica para mostrar los datos en el HTML
+                    MostrarDatosEnHTML(data);
+                })
+                .catch(error => {
+                    console.error("Error al cargar el archivo:", error);
+                });
+        }
+
+        function MostrarDatosEnHTML(data) {
+            // Ejemplo: Mostrar información en una tabla
+            const datosTiempoDiv = document.getElementById("datosTiempo");
+            datosTiempoDiv.innerHTML = ""; // Limpiar contenido anterior
+
+            // Crear tabla
+            const tabla = document.createElement("table");
+            tabla.border = "1";
+
+            // Encabezados de la tabla
+            const encabezados = ["Fecha", "Temperatura Actual", "Humedad", "Viento", "Precipitación"];
+            const encabezadosRow = document.createElement("tr");
+            encabezados.forEach(encabezado => {
+                const th = document.createElement("th");
+                th.textContent = encabezado;
+                encabezadosRow.appendChild(th);
+            });
+            tabla.appendChild(encabezadosRow);
+
+            // Filas de datos
+            const datosRow = document.createElement("tr");
+            datosRow.innerHTML = `<td>${data.fecha}</td>
+                                  <td>${data.temperatura_actual} °C</td>
+                                  <td>${data.humedad} %</td>
+                                  <td>${data.viento} m/s</td>
+                                  <td>${data.precipitacion} mm</td>`;
+            tabla.appendChild(datosRow);
+
+            // Agregar tabla al div
+            datosTiempoDiv.appendChild(tabla);
+
+            //para listar las provincias
+        }
+
+        function CargarProvincias() {
+            fetch("https://www.el-tiempo.net/api/json/v2/provincias")
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("La solicitud no se pudo completar correctamente.");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Lógica para mostrar los datos en la consola y en la tabla
+                    MostrarProvinciasEnConsola(data);
+                    tablaProvincias(data);
+                })
+                .catch(error => {
+                    console.error("Error al cargar las provincias:", error);
+                });
+        }
+
+        function MostrarProvinciasEnConsola(data) {
+            console.log("Listado de Provincias:");
+            console.log(data);
+        }
+
+        function tablaProvincias(data) {
+            const datosProvincias = document.getElementById("datosProvincias");
+            datosProvincias.innerHTML = ""; // Limpiar contenido anterior
+
+            // Crear tabla
+            const tabla = document.createElement("table");
+            tabla.border = "1";
+
+            // Encabezados de la tabla
+            const encabezados = ["CODPROV", "NOMBRE_PROVINCIA", "CODAUTON", "CAPITAL_PROVINCIA", "CODAUTON", "CODPROV", "COMUNIDAD_CIUDAD_AUTONOMA", "NOMBRE_PROVINCIA"];
+            const encabezadosRow = document.createElement("tr");
+            encabezados.forEach(encabezado => {
+                const th = document.createElement("th");
+                th.textContent = encabezado;
+                encabezadosRow.appendChild(th);
+            });
+            tabla.appendChild(encabezadosRow);
+
+            // Iterar sobre las provincias y agregar filas de datos
+            data.provincias.forEach(provincia => {
+                const datosRow = document.createElement("tr");
+                datosRow.innerHTML = `<td>${provincia.CODPROV}</td>
+                                      <td>${provincia.NOMBRE_PROVINCIA}</td>
+                                      <td>${provincia.CODAUTON}</td>
+                                      <td>${provincia.CAPITAL_PROVINCIA}</td>
+                                      <td>${provincia.CODAUTON}</td>
+                                      <td>${provincia.CODPROV}</td>
+                                      <td>${provincia.COMUNIDAD_CIUDAD_AUTONOMA}</td>
+                                      <td>${provincia.NOMBRE_PROVINCIA}</td>`;
+                tabla.appendChild(datosRow);
+            });
+
+            // Agregar tabla al div
+            datosProvincias.appendChild(tabla);
+        }
+
+
+        //MUNICIPIOS
+        function CargarMunicipios() {
+            fetch("https://www.el-tiempo.net/api/json/v2/provincias/20/municipios")
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("La solicitud no se pudo completar correctamente.");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Lógica para mostrar los datos en la consola y en la tabla
+                    MostrarMunicipiosEnConsola(data);
+                    tablaMunicipios(data);
+                })
+                .catch(error => {
+                    console.error("Error al cargar las Municipios:", error);
+                });
+        }
+
+        function MostrarMunicipiosEnConsola(data) {
+            console.log("Listado de Municipios:");
+            console.log(data);
+        }
+
+        function tablaMunicipios(data) {
+            const datosMunicipios = document.getElementById("datosMunicipios");
+            datosMunicipios.innerHTML = ""; // Limpiar contenido anterior
+
+            // Crear tabla
+            const tabla = document.createElement("table");
+            tabla.border = "1";
+
+            // Encabezados de la tabla
+            const encabezados = ["CODPROV", "NOMBRE_PROVINCIA", "CODAUTON", "CAPITAL_PROVINCIA", "CODAUTON", "CODPROV", "COMUNIDAD_CIUDAD_AUTONOMA", "NOMBRE_PROVINCIA"];
+            const encabezadosRow = document.createElement("tr");
+            encabezados.forEach(encabezado => {
+                const th = document.createElement("th");
+                th.textContent = encabezado;
+                encabezadosRow.appendChild(th);
+            });
+            tabla.appendChild(encabezadosRow);
+
+            // Iterar sobre las provincias y agregar filas de datos
+            data.provincias.forEach(municipio => {
+                const datosRow = document.createElement("tr");
+                datosRow.innerHTML = `<td>${municipio.CODPROV}</td>
+                                      <td>${municipio.NOMBRE_PROVINCIA}</td>
+                                      <td>${municipio.CODAUTON}</td>
+                                      <td>${municipio.CAPITAL_PROVINCIA}</td>
+                                      <td>${municipio.CODAUTON}</td>
+                                      <td>${municipio.CODPROV}</td>
+                                      <td>${municipio.COMUNIDAD_CIUDAD_AUTONOMA}</td>
+                                      <td>${municipio.NOMBRE_PROVINCIA}</td>`;
+                tabla.appendChild(datosRow);
+            });
+
+            // Agregar tabla al div
+            datosMunicipios.appendChild(tabla);
+        }
+
+
+
+
+        
+
+
+
+    </script>
+</body>
+</html>
