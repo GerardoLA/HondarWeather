@@ -17,7 +17,7 @@
 <body>
   <nav class="navbar navbar-expand-lg navbar-light ">
     <div class="container-fluid">
-      <a class="navbar-brand text-white" href="#">Logo</a>
+      <a class="navbar-brand text-white" href="#"><img src="imagenes/logo2.png" alt="logo"></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -80,15 +80,29 @@
 
     // Función para crear o eliminar la tarjeta
     function gestionarTarjeta(nombre, temperatura, humedad) {
-
+      
       // Verificar si la tarjeta ya existe
       const tarjetaExistente = document.querySelector(`.card[data-lugar="${nombre}"]`);
       if (tarjetaExistente.style.display == "none") {
         // Si la tarjeta existe, eliminarla
         tarjetaExistente.style.display = "block"
+         // Agregar la clase 'huechange' al marcador
+         const marker = findMarkerByName(nombre);
+        if (marker) {
+          marker._icon.classList.add("huechange");
+        }
       } else {
-        tarjetaExistente.style.display = "none"
+        tarjetaExistente.style.display = "none";
+         // Eliminar la clase 'huechange' del marcador
+         const marker = findMarkerByName(nombre);
+        if (marker) {
+          marker._icon.classList.remove("huechange");
+        }
       }
+    }
+    function findMarkerByName(nombre) {
+      // Buscar el marcador por nombre y devolverlo
+      return markers.find(marker => marker.options.title === nombre);
     }
     function crearCards(nombre, temperatura, humedad) {
       const panelMet = document.getElementById('PanelMet');
@@ -163,22 +177,31 @@
       var closestCard = ev.target.closest('.card');
 
       if (closestCard) {
-        var cardBody = closestCard.querySelector('.card-body');
-        var nuevoParrafo = document.createElement('p');
-        nuevoParrafo.classList.add('card-text');
-        var nombreLugar = closestCard.dataset.lugar;
-        var lugarSeleccionado = lugares.find(lugar => lugar.nombre == nombreLugar);
-        if (tipo === 'lluvia') {
-          nuevoParrafo.innerHTML = `<img src="./imagenes/lluvia.png" alt="lluvia"> ${lugarSeleccionado.lluvia} mm`;
-        } else if (tipo === 'viento') {
-          nuevoParrafo.innerHTML = `<img src="./imagenes/viento.png" alt="viento"> ${lugarSeleccionado.viento} m/s`;
-        }
+        // Verificar si ya existe un párrafo con el mismo tipo en la tarjeta
+    var cardBody = closestCard.querySelector('.card-body');
+    var existingParrafos = cardBody.querySelectorAll('.card-text');
+    var existeTipoEnTarjeta = Array.from(existingParrafos).some(parrafo => {
+      return parrafo.innerHTML.includes(`<img src="./imagenes/${tipo}.png" alt="${tipo}">`);
+    });
 
-        // Insertar el nuevo párrafo después de los párrafos existentes
-        var existingParrafos = cardBody.querySelectorAll('.card-text');
-        cardBody.insertBefore(nuevoParrafo, existingParrafos[existingParrafos.length - 1].nextSibling);
+    // Si no existe el mismo tipo en la tarjeta, se permite agregar el párrafo
+    if (!existeTipoEnTarjeta) {
+      var nuevoParrafo = document.createElement('p');
+      nuevoParrafo.classList.add('card-text');
+      var nombreLugar = closestCard.dataset.lugar;
+      var lugarSeleccionado = lugares.find(lugar => lugar.nombre == nombreLugar);
+
+      if (tipo === 'lluvia') {
+        nuevoParrafo.innerHTML = `<img src="./imagenes/lluvia.png" alt="lluvia"> ${lugarSeleccionado.lluvia} mm`;
+      } else if (tipo === 'viento') {
+        nuevoParrafo.innerHTML = `<img src="./imagenes/viento.png" alt="viento"> ${lugarSeleccionado.viento} m/s`;
       }
-    }
+
+// Insertar el nuevo párrafo después de los párrafos existentes
+cardBody.insertBefore(nuevoParrafo, existingParrafos[existingParrafos.length - 1].nextSibling);
+}
+}
+}
 
     function logout() {
       let config = {
