@@ -11,4 +11,6 @@ class DatosController extends Controller
     // Gestionar datos
 
     // Mandar datos a la bbdd
+
+    
 }

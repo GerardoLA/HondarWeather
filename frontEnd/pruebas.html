@@ -23,6 +23,112 @@
       <div id="datosMunicipios"></div>
       
     <script>
+
+        /*codigos euskalmet*/
+        /*
+        zonas = [
+  {
+    "key": "euskalmet/geo/regions/basque_country/zones/cantabrian_mountains",
+    "regionId": "basque_country",
+    "regionZoneId": "cantabrian_mountains"
+  },
+  {
+    "key": "euskalmet/geo/regions/basque_country/zones/cantabrian_valleys",
+    "regionId": "basque_country",
+    "regionZoneId": "cantabrian_valleys"
+  },
+  {
+    "key": "euskalmet/geo/regions/basque_country/zones/coast_zone",
+    "regionId": "basque_country",
+    "regionZoneId": "coast_zone"
+  },
+  {
+    "key": "euskalmet/geo/regions/basque_country/zones/donostialdea",
+    "regionId": "basque_country",
+    "regionZoneId": "donostialdea"
+  },
+  {
+    "key": "euskalmet/geo/regions/basque_country/zones/ebro_valley",
+    "regionId": "basque_country",
+    "regionZoneId": "ebro_valley"
+  },
+  {
+    "key": "euskalmet/geo/regions/basque_country/zones/great_bilbao",
+    "regionId": "basque_country",
+    "regionZoneId": "great_bilbao"
+  },
+  {
+    "key": "euskalmet/geo/regions/basque_country/zones/interior_basins",
+    "regionId": "basque_country",
+    "regionZoneId": "interior_basins"
+  },
+  {
+    "key": "euskalmet/geo/regions/basque_country/zones/pyrenees",
+    "regionId": "basque_country",
+    "regionZoneId": "pyrenees"
+  },
+  {
+    "key": "euskalmet/geo/regions/basque_country/zones/southern_mountain",
+    "regionId": "basque_country",
+    "regionZoneId": "southern_mountain"
+  },
+  {
+    "key": "euskalmet/geo/regions/basque_country/zones/vitoria_gasteiz",
+    "regionId": "basque_country",
+    "regionZoneId": "vitoria_gasteiz"
+  }
+];
+lugaresDonostialdea = [
+  {
+    "key": "euskalmet/geo/regions/basque_country/zones/donostialdea/locations/donostia",
+    "regionId": "basque_country",
+    "regionZoneId": "donostialdea",
+    "regionZoneLocationId": "donostia"
+  },
+  {
+    "key": "euskalmet/geo/regions/basque_country/zones/donostialdea/locations/errenteria",
+    "regionId": "basque_country",
+    "regionZoneId": "donostialdea",
+    "regionZoneLocationId": "errenteria"
+  },
+  {
+    "key": "euskalmet/geo/regions/basque_country/zones/donostialdea/locations/pasaia",
+    "regionId": "basque_country",
+    "regionZoneId": "donostialdea",
+    "regionZoneLocationId": "pasaia"
+  }
+];
+
+lugarescosta_zone = [
+     {
+    "key": "euskalmet/geo/regions/basque_country/zones/coast_zone/locations/getaria",
+    "regionId": "basque_country",
+    "regionZoneId": "coast_zone",
+    "regionZoneLocationId": "getaria"
+  },
+  {
+    "key": "euskalmet/geo/regions/basque_country/zones/coast_zone/locations/hondarribia",
+    "regionId": "basque_country",
+    "regionZoneId": "coast_zone",
+    "regionZoneLocationId": "hondarribia"
+  } 
+];
+
+lugaresGreat_Bilbao = [
+    {        
+    "key": "euskalmet/geo/regions/basque_country/zones/great_bilbao/locations/bilbao",
+    "regionId": "basque_country",
+    "regionZoneId": "great_bilbao",
+    "regionZoneLocationId": "bilbao"
+
+    }
+]
+
+
+
+
+
+  */
         function CargarArchivoTexto() {
             fetch("https://www.el-tiempo.net/api/json/v2/provincias/20/municipios/20036")
             .then(response => {
@@ -138,7 +244,7 @@
 
         //MUNICIPIOS
         function CargarMunicipios() {
-            fetch("https://www.el-tiempo.net/api/json/v2/provincias/48/municipios")
+            fetch("https://www.el-tiempo.net/api/json/v2/provincias/20/municipios")
                 .then(response => {
                     if (!response.ok) {
                         throw new Error("La solicitud no se pudo completar correctamente.");
