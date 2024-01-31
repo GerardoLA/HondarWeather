@@ -10,7 +10,7 @@ class Lugar extends Model
     use HasFactory;
 
     protected $table = "lugares";
-
+    public $timestamps = false;
     protected $keyType = "string";
     protected $primaryKey = "nombre";
 
@@ -23,8 +23,5 @@ class Lugar extends Model
         "temperatura",
         "humedad",
         "viento",
-        "fecha"
-        
-
     ];
 }
