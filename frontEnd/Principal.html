@@ -75,26 +75,60 @@
     <div id="PanelMet" class="card-deck" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
   </div>
   <script>
-    // Estructura de datos para realizar un seguimiento de los lugares clicados
+
+    var map = L.map('mapid').setView([43.30577097201333, -2.213991338082935], 10);
+    var lugares = new Array();
     const lugaresClicados = new Set(JSON.parse(localStorage.getItem('lugaresClicados')) || []);
 
-    // Función para crear o eliminar la tarjeta
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    fetch('http://10.10.17.164:8085/api/recoger')
+      .then(response => {
+        return response.json()
+      })
+      .then(data => {
+
+        lugares = data.lugares
+        console.log(lugares)
+        // Estructura de datos para realizar un seguimiento de los lugares clicados
+
+        lugares.forEach(lugar => { //Metodo for each para colocar un puntero en cada elemento del array
+          var marker = L.marker([lugar.latitud, lugar.longitud]).addTo(map);
+          crearCards(lugar.nombre, lugar.temperatura, lugar.humedad)
+          marker.bindTooltip(lugar.nombre, {
+            permanent: false,    // El tooltip no será permanente
+            direction: 'top',    // Se mostrará encima del marcador
+            offset: L.point(0, -20) // Desplazamiento del tooltip respecto al marcador   
+          });
+
+          marker.on('click', function () {
+            // Aquí lugar es accesible debido al ámbito de la clausura
+            console.log(lugar.nombre);
+            marker._icon.classList.add("huechange"); //Cambiar el color de los punteros
+            gestionarTarjeta(lugar.nombre, lugar.temperatura, lugar.humedad);
+          });
+        });
+
+
+      })
     function gestionarTarjeta(nombre, temperatura, humedad) {
-      
+
       // Verificar si la tarjeta ya existe
       const tarjetaExistente = document.querySelector(`.card[data-lugar="${nombre}"]`);
       if (tarjetaExistente.style.display == "none") {
         // Si la tarjeta existe, eliminarla
         tarjetaExistente.style.display = "block"
-         // Agregar la clase 'huechange' al marcador
-         const marker = findMarkerByName(nombre);
+        // Agregar la clase 'huechange' al marcador
+        const marker = findMarkerByName(nombre);
         if (marker) {
           marker._icon.classList.add("huechange");
         }
       } else {
         tarjetaExistente.style.display = "none";
-         // Eliminar la clase 'huechange' del marcador
-         const marker = findMarkerByName(nombre);
+        // Eliminar la clase 'huechange' del marcador
+        const marker = findMarkerByName(nombre);
         if (marker) {
           marker._icon.classList.remove("huechange");
         }
@@ -111,13 +145,13 @@
       tarjeta.classList.add('card');
       tarjeta.dataset.lugar = nombre; // Agregar un atributo de datos para identificar la tarjeta por lugar
       tarjeta.innerHTML = `
-          <div class="card-body">
-            <h5 class="card-title">${nombre}</h5>
-            <p class="card-text"><img src="./imagenes/temperatura.png" alt="temperatura">${temperatura}ºC </p>
-            <p class="card-text"><img src="./imagenes/humedad.png" alt="humedad"> ${humedad}% </p>
-            <a href="#" class="btn btn-primary">Botón</a>
-          </div>
-        `;
+<div class="card-body">
+<h5 class="card-title">${nombre}</h5>
+<p class="card-text"><img src="./imagenes/temperatura.png" alt="temperatura">${temperatura}ºC </p>
+<p class="card-text"><img src="./imagenes/humedad.png" alt="humedad"> ${humedad}% </p>
+<a href="#" class="btn btn-primary">Botón</a>
+</div>
+`;
       tarjeta.style.display = "none"
       // Agregar la tarjeta al div PanelMet
       panelMet.appendChild(tarjeta);
@@ -128,38 +162,6 @@
       localStorage.setItem('lugaresClicados', JSON.stringify(Array.from(lugaresClicados)));
     }
 
-    // Inicializar el mapa y establecer las coordenadas y el nivel de zoom
-    var map = L.map('mapid').setView([43.30577097201333, -2.213991338082935], 10);
-    var lugares = [ //Array con diferentes lugares
-      { "nombre": "Guetaria", "latitud": 43.30577097201333, "longitud": -2.213991338082935, "temperatura": 16, "humedad": 88, "viento": 12, "lluvia": 0.4 },
-      { "nombre": "Donosti", "latitud": 43.3183, "longitud": -1.9812, "temperatura": 17, "humedad": 89, "viento": 16, "lluvia": 0.8 },
-      { "nombre": "Pasaia", "latitud": 43.333902512171576, "longitud": -1.9322191644851154, "temperatura": 17, "humedad": 92, "viento": 11, "lluvia": 1.4 },
-      { "nombre": "Bilbo", "latitud": 43.26838, "longitud": -2.93408, "temperatura": 15, "humedad": 94, "viento": 22, "lluvia": 11.4 },
-      { "nombre": "Hondarribia", "latitud": 43.3682, "longitud": -1.7933, "temperatura": 21, "humedad": 80, "viento": 0.2, "lluvia": 0.0 }
-    ];
-
-    lugares.forEach(lugar => { //Metodo for each para colocar un puntero en cada elemento del array
-      var marker = L.marker([lugar.latitud, lugar.longitud]).addTo(map);
-      crearCards(lugar.nombre, lugar.temperatura, lugar.humedad)
-      marker.bindTooltip(lugar.nombre, {
-        permanent: false,    // El tooltip no será permanente
-        direction: 'top',    // Se mostrará encima del marcador
-        offset: L.point(0, -20) // Desplazamiento del tooltip respecto al marcador   
-      });
-
-      marker.on('click', function () {
-        // Aquí lugar es accesible debido al ámbito de la clausura
-        console.log(lugar.nombre);
-        marker._icon.classList.add("huechange"); //Cambiar el color de los punteros
-        gestionarTarjeta(lugar.nombre, lugar.temperatura, lugar.humedad);
-      });
-    });
-
-
-    // Añadir una capa de tiles de OpenStreetMap
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
     function allowDrop(ev) {
       ev.preventDefault();
     }
@@ -178,30 +180,30 @@
 
       if (closestCard) {
         // Verificar si ya existe un párrafo con el mismo tipo en la tarjeta
-    var cardBody = closestCard.querySelector('.card-body');
-    var existingParrafos = cardBody.querySelectorAll('.card-text');
-    var existeTipoEnTarjeta = Array.from(existingParrafos).some(parrafo => {
-      return parrafo.innerHTML.includes(`<img src="./imagenes/${tipo}.png" alt="${tipo}">`);
-    });
+        var cardBody = closestCard.querySelector('.card-body');
+        var existingParrafos = cardBody.querySelectorAll('.card-text');
+        var existeTipoEnTarjeta = Array.from(existingParrafos).some(parrafo => {
+          return parrafo.innerHTML.includes(`<img src="./imagenes/${tipo}.png" alt="${tipo}">`);
+        });
 
-    // Si no existe el mismo tipo en la tarjeta, se permite agregar el párrafo
-    if (!existeTipoEnTarjeta) {
-      var nuevoParrafo = document.createElement('p');
-      nuevoParrafo.classList.add('card-text');
-      var nombreLugar = closestCard.dataset.lugar;
-      var lugarSeleccionado = lugares.find(lugar => lugar.nombre == nombreLugar);
+        // Si no existe el mismo tipo en la tarjeta, se permite agregar el párrafo
+        if (!existeTipoEnTarjeta) {
+          var nuevoParrafo = document.createElement('p');
+          nuevoParrafo.classList.add('card-text');
+          var nombreLugar = closestCard.dataset.lugar;
+          var lugarSeleccionado = lugares.find(lugar => lugar.nombre == nombreLugar);
 
-      if (tipo === 'lluvia') {
-        nuevoParrafo.innerHTML = `<img src="./imagenes/lluvia.png" alt="lluvia"> ${lugarSeleccionado.lluvia} mm`;
-      } else if (tipo === 'viento') {
-        nuevoParrafo.innerHTML = `<img src="./imagenes/viento.png" alt="viento"> ${lugarSeleccionado.viento} m/s`;
+          if (tipo === 'lluvia') {
+            nuevoParrafo.innerHTML = `<img src="./imagenes/lluvia.png" alt="lluvia"> ${lugarSeleccionado.lluvia} mm`;
+          } else if (tipo === 'viento') {
+            nuevoParrafo.innerHTML = `<img src="./imagenes/viento.png" alt="viento"> ${lugarSeleccionado.viento} m/s`;
+          }
+
+          // Insertar el nuevo párrafo después de los párrafos existentes
+          cardBody.insertBefore(nuevoParrafo, existingParrafos[existingParrafos.length - 1].nextSibling);
+        }
       }
-
-// Insertar el nuevo párrafo después de los párrafos existentes
-cardBody.insertBefore(nuevoParrafo, existingParrafos[existingParrafos.length - 1].nextSibling);
-}
-}
-}
+    }
 
     function logout() {
       let config = {

@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\API\RegisterController;
+use App\Http\Controllers\LugarController;
 
 
 /*
@@ -16,6 +17,8 @@ use App\Http\Controllers\API\RegisterController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+Route::get('/recoger', [LugarController::class, 'index']); 
+
 
 Route::post('register', [RegisterController::class, 'register']);
 Route::post('login', [RegisterController::class, 'login']);
