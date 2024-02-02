@@ -25,7 +25,7 @@ class LugarController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store()
     {
         $provincias = array(
             'Gipuzkoa' => array(
@@ -57,8 +57,21 @@ class LugarController extends Controller
                 $data = $response->json();
         
                 if ($municipioId == 20069) {
-                    $data['municipio']['NOMBRE'] = "Donostia";
+                    $data['municipio']['NOMBRE'] = "Donostia"; //cambio de nombre porque la Api lo da como Donostia/San Sebastian
                 }
+
+                // 
+                $lugar = Lugar::where('nombre', $data['municipio']['NOMBRE'])->first();
+                //Si encuentra la variable lugar actualizalo, si no lo crea
+                if($lugar){
+                    $lugar -> temperatura = $data['temperatura_actual'] == "" ? 0 : $data['temperatura_actual'];
+                    $lugar -> humedad = $data['humedad'] == "" ? 0 : $data['humedad'];
+                    $lugar -> viento = $data['viento'] == "" ? 0 : $data['viento'];
+                    $lugar -> lluvia = $data['lluvia'] == "" ? 0 : $data['lluvia'];
+                    
+                    $lugar->save();
+                }
+                else{
                 Lugar::create([
                     'nombre' => $data['municipio']['NOMBRE'],
                     'latitud' => $data['municipio']['LATITUD_ETRS89_REGCAN95'],
@@ -76,11 +89,11 @@ class LugarController extends Controller
             }
         
         
-        
+    }
             /**
              * Update the specified resource in storage.
              */
-            public function update(Request $request, Lugar_GotaMeteor $lugar_GotaMeteor)
+            public function update()
             {
                 //
             }

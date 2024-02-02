@@ -45,7 +45,7 @@ services:
       - DB_DATABASE=Gerardo
     volumes:
       - './datosProyecto/HondarWeather_alimentadorDatos:/app'
-
+    command: ["php", "artisan", "schedule:work"]
   # mysql:
   #   image: mysql:latest
   #   environment:
