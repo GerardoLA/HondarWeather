@@ -93,11 +93,19 @@ class LugarController extends Controller
             /**
              * Update the specified resource in storage.
              */
-            public function update()
+            public function updateDatosRandom()
             {
-                //
+                $lugares = Lugar::all();
+                foreach($lugares as $lugar){
+                    $lugar -> temperatura = $lugar -> temperatura + rand(-50,50)/100;
+                    $lugar -> humedad = $lugar -> humedad + rand(-50,50)/100;
+                    $lugar -> viento = $lugar -> viento + rand(-50,50)/100;
+                    $lugar -> lluvia = $lugar -> lluvia + rand(-50,50)/100;
+            
+                    $lugar->save();
             }
             
         
            
         }
+    }

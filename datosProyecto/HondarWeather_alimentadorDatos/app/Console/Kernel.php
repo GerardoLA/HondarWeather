@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule -> command("app:alimenta-b-b-d-d")->everyFifteenMinutes(); //tarea programada encargada de ejecutar la función de alimentación para la BBDD
+        $schedule -> command("app:alimentacion-aleatorios")->everyFifteenSeconds();
     }
 
     /**
