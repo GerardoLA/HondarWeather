@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Http;
 use App\Models\Historico;
 use Illuminate\Http\Request;
 
@@ -65,8 +66,8 @@ class HistoricoController extends Controller
                 Historico::create([
                     'fecha' => date('Y-m-d H:i:s'),
                     'temperatura' => $data['temperatura_actual'] == "" ? 0 : $data['temperatura_actual'],
-                    'humedad' => $data ['humedad'],
-                    'nombre' => $data['nombre']
+                    'humedad' => $data ['humedad'] == "" ? 0 : $data['humedad'],
+                    'nombre' => $data['municipio']['NOMBRE']
                 ]);
         }
     }

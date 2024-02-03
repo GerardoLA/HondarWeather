@@ -11,11 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('historicos', function (Blueprint $table) {
+        Schema::create('historico_datos', function (Blueprint $table) {
             $table->date('fecha');
             $table->float('temperatura');
             $table->float('humedad');
             $table->string('nombre');
+
+            //clave primaria
+            $table->primary(['nombre','fecha']);
+            //foreign key
+            $table->foreign('nombre')->references('nombre')->on('lugares');
             
         });
     }
@@ -25,6 +30,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('historicos');
+        Schema::table('historico_datos', function (Blueprint $table) {
+            $table->dropForeign(['nombre']);
+        });
+    
+    
+        Schema::dropIfExists('historico_datos');
     }
 };
