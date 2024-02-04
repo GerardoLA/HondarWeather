@@ -76,15 +76,21 @@
   </div>
   <script>
 
-    var map = L.map('mapid').setView([43.30577097201333, -2.213991338082935], 10);
+var map = L.map('mapid').setView([43.30577097201333, -2.213991338082935], 10);
     var lugares = new Array();
+    var markers = [];
     const lugaresClicados = new Set(JSON.parse(localStorage.getItem('lugaresClicados')) || []);
+    // Recuperar las cards del localStorage y agregarlas al panel
+    const storedCards = JSON.parse(localStorage.getItem('storedCards')) || [];
+    storedCards.forEach(cardData => {
+      crearCards(cardData.nombre, cardData.temperatura, cardData.humedad);
+    });
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-    fetch('http://10.10.17.164:8085/api/recoger')
+    fetch('http://localhost:8085/api/recoger')
       .then(response => {
         return response.json()
       })
@@ -94,22 +100,23 @@
         console.log(lugares)
         // Estructura de datos para realizar un seguimiento de los lugares clicados
 
-        lugares.forEach(lugar => { //Metodo for each para colocar un puntero en cada elemento del array
-          var marker = L.marker([lugar.latitud, lugar.longitud]).addTo(map);
-          crearCards(lugar.nombre, lugar.temperatura, lugar.humedad)
-          marker.bindTooltip(lugar.nombre, {
-            permanent: false,    // El tooltip no será permanente
-            direction: 'top',    // Se mostrará encima del marcador
-            offset: L.point(0, -20) // Desplazamiento del tooltip respecto al marcador   
-          });
+        lugares.forEach(lugar => { 
+  var marker = L.marker([lugar.latitud, lugar.longitud]).addTo(map);
+  markers.push(marker);  // Agrega el marcador al array markers
+  crearCards(lugar.nombre, lugar.temperatura, lugar.humedad);
 
-          marker.on('click', function () {
-            // Aquí lugar es accesible debido al ámbito de la clausura
-            console.log(lugar.nombre);
-            marker._icon.classList.add("huechange"); //Cambiar el color de los punteros
-            gestionarTarjeta(lugar.nombre, lugar.temperatura, lugar.humedad);
-          });
-        });
+  marker.bindTooltip(lugar.nombre, {
+    permanent: false,
+    direction: 'top',
+    offset: L.point(0, -20)
+  });
+
+  marker.on('click', function () {
+    console.log(lugar.nombre);
+    marker._icon.classList.add("huechange");
+    gestionarTarjeta(lugar.nombre, lugar.temperatura, lugar.humedad);
+  });
+});
 
 
       })
@@ -133,7 +140,10 @@
           marker._icon.classList.remove("huechange");
         }
       }
+      // Actualizar el localStorage con las cards actuales
+      actualizarLocalStorage();
     }
+
     function findMarkerByName(nombre) {
       // Buscar el marcador por nombre y devolverlo
       return markers.find(marker => marker.options.title === nombre);
@@ -156,10 +166,22 @@
       // Agregar la tarjeta al div PanelMet
       panelMet.appendChild(tarjeta);
 
-      // Agregar el lugar al conjunto de lugares clicados
+      // Agregar la card al conjunto de cards almacenadas
+      const cardData = {
+        nombre: nombre,
+        temperatura: temperatura,
+        humedad: humedad
+      };
       lugaresClicados.add(nombre);
-      //Actualizar el localStorage de los lugares clicados
+      storedCards.push(cardData);
+
+      // Actualizar el localStorage de las cards almacenadas
+      actualizarLocalStorage();
+    }
+
+    function actualizarLocalStorage() {
       localStorage.setItem('lugaresClicados', JSON.stringify(Array.from(lugaresClicados)));
+      localStorage.setItem('storedCards', JSON.stringify(storedCards));
     }
 
     function allowDrop(ev) {
