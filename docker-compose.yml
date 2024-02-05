@@ -24,11 +24,11 @@ services:
     ports:
       - '8085:8000'
     environment:
-      - DB_HOST=185.60.40.210
+      - DB_HOST=mysql
       - DB_PORT=3306
-      - DB_USERNAME=Gerardo
-      - DB_PASSWORD=12345678
-      - DB_DATABASE=Gerardo
+      - DB_USERNAME=root
+      - DB_PASSWORD=password
+      - DB_DATABASE=Proyecto
     volumes:
       - './datosProyecto/HondarWeather:/app'
      
@@ -38,34 +38,34 @@ services:
     ports:
       - '8086:8000'
     environment:
-      - DB_HOST=185.60.40.210
+      - DB_HOST=mysql
       - DB_PORT=3306
-      - DB_USERNAME=Gerardo
-      - DB_PASSWORD=12345678
-      - DB_DATABASE=Gerardo
+      - DB_USERNAME=root
+      - DB_PASSWORD=password
+      - DB_DATABASE=Proyecto
     volumes:
       - './datosProyecto/HondarWeather_alimentadorDatos:/app'
     command: ["php", "artisan", "schedule:work"]
-  # mysql:
-  #   image: mysql:latest
-  #   environment:
-  #     MYSQL_DATABASE: 'ProyectoFinal'
-  #     MYSQL_USER: 'usuario'
-  #     MYSQL_PASSWORD: 'password'
-  #     MYSQL_ROOT_PASSWORD: 'password'
-  #   ports:
-  #     - '3306:3306'
-  #   expose:
-  #     - '3306'
-  #   volumes:
-  #     - ./datosProyecto/mysql/:/var/lib/mysql
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: 'Proyecto'
+      MYSQL_USER: 'usuario'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - ./datosProyecto/mysql/:/var/lib/mysql
 
-  # phpmyadmin:
-  #       image: 'phpmyadmin:latest'
-  #       ports:
-  #           - 8084:80
-  #       environment:
-  #           - PMA_ARBITRARY=1
+  phpmyadmin:
+        image: 'phpmyadmin:latest'
+        ports:
+            - 8084:80
+        environment:
+            - PMA_ARBITRARY=1
 
-# volumes:
-#   my-db:
+volumes:
+  my-db:
