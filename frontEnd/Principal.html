@@ -76,7 +76,7 @@
   </div>
   <script>
 
-var map = L.map('mapid').setView([43.30577097201333, -2.213991338082935], 10);
+    var map = L.map('mapid').setView([43.30577097201333, -2.213991338082935], 10);
     var lugares = new Array();
     var markers = [];
     const lugaresClicados = new Set(JSON.parse(localStorage.getItem('lugaresClicados')) || []);
@@ -100,24 +100,28 @@ var map = L.map('mapid').setView([43.30577097201333, -2.213991338082935], 10);
         console.log(lugares)
         // Estructura de datos para realizar un seguimiento de los lugares clicados
 
-        lugares.forEach(lugar => { 
-  var marker = L.marker([lugar.latitud, lugar.longitud]).addTo(map);
-  markers.push(marker);  // Agrega el marcador al array markers
-  crearCards(lugar.nombre, lugar.temperatura, lugar.humedad);
+        lugares.forEach(lugar => {
+          var marker = L.marker([lugar.latitud, lugar.longitud]).addTo(map);
+          markers.push(marker);  // Agrega el marcador al array markers
+          crearCards(lugar.nombre, lugar.temperatura, lugar.humedad);
 
-  marker.bindTooltip(lugar.nombre, {
-    permanent: false,
-    direction: 'top',
-    offset: L.point(0, -20)
-  });
+          marker.bindTooltip(lugar.nombre, {
+            permanent: false,
+            direction: 'top',
+            offset: L.point(0, -20)
+          });
+          marker._icon.classList.add(`${lugar.nombre}`);
+          marker.on('click', function () {
 
-  marker.on('click', function () {
-    console.log(lugar.nombre);
-    marker._icon.classList.add("huechange");
-    gestionarTarjeta(lugar.nombre, lugar.temperatura, lugar.humedad);
-  });
-});
+            gestionarTarjeta(lugar.nombre, lugar.temperatura, lugar.humedad);
 
+          });
+        });
+
+        for (let lugar of lugaresClicados) {
+          document.getElementById(lugar).style.display="block"
+          $(document.getElementsByClassName(`${lugar}`)[0]).css("filter", "hue-rotate(180deg)")
+        }
 
       })
     function gestionarTarjeta(nombre, temperatura, humedad) {
@@ -127,18 +131,11 @@ var map = L.map('mapid').setView([43.30577097201333, -2.213991338082935], 10);
       if (tarjetaExistente.style.display == "none") {
         // Si la tarjeta existe, eliminarla
         tarjetaExistente.style.display = "block"
-        // Agregar la clase 'huechange' al marcador
-        const marker = findMarkerByName(nombre);
-        if (marker) {
-          marker._icon.classList.add("huechange");
-        }
+        $(document.getElementsByClassName(`${nombre}`)[0]).css("filter", "hue-rotate(180deg)")//Para con JQuery buscar el marcador que corresponde a la ciudad y cambie el color a este
       } else {
         tarjetaExistente.style.display = "none";
-        // Eliminar la clase 'huechange' del marcador
         const marker = findMarkerByName(nombre);
-        if (marker) {
-          marker._icon.classList.remove("huechange");
-        }
+        $(document.getElementsByClassName(`${nombre}`)[0]).css("filter", "hue-rotate(0deg)")//Para con JQuery buscar el marcador que corresponde a la ciudad y cambie el color a este
       }
       // Actualizar el localStorage con las cards actuales
       actualizarLocalStorage();
@@ -153,6 +150,7 @@ var map = L.map('mapid').setView([43.30577097201333, -2.213991338082935], 10);
 
       const tarjeta = document.createElement('div');
       tarjeta.classList.add('card');
+      tarjeta.id = nombre //Asignar id de nombre del lugar a la card, para poder buscarlo por id
       tarjeta.dataset.lugar = nombre; // Agregar un atributo de datos para identificar la tarjeta por lugar
       tarjeta.innerHTML = `
 <div class="card-body">
@@ -177,11 +175,13 @@ var map = L.map('mapid').setView([43.30577097201333, -2.213991338082935], 10);
 
       // Actualizar el localStorage de las cards almacenadas
       actualizarLocalStorage();
+
     }
 
     function actualizarLocalStorage() {
+      localStorage.removeItem('storedCards')
       localStorage.setItem('lugaresClicados', JSON.stringify(Array.from(lugaresClicados)));
-      localStorage.setItem('storedCards', JSON.stringify(storedCards));
+      // localStorage.setItem('storedCards', JSON.stringify(storedCards));
     }
 
     function allowDrop(ev) {
