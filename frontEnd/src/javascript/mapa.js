@@ -18,9 +18,9 @@ function cargarMapa() {
                     .addTo(map)
                     .on('click', function () {
                         this._icon.classList.add(lugar.nombre);
-                        añadirCiudad(lugar.nombre)
+                        this._icon.classList.add("seleccionado")
+                        añadirCiudad(lugar.nombre, this)
                         mostrarCiudades()
-                        $(document.getElementsByClassName(lugar.nombre)[0]).css("filter", "hue-rotate(140deg)")
                     })
                     .bindTooltip(lugar.nombre, {
                         permanent: false,
@@ -30,9 +30,9 @@ function cargarMapa() {
 
                 marker._icon.classList.add(lugar.nombre)
 
+                //Si la ciudad está registrada al cargar la página cambia el color del marker
                 if (localStorage.getItem("lugares") && localStorage.getItem("lugares").includes(lugar.nombre)) {
                     $(document.getElementsByClassName(lugar.nombre)[0]).css("filter", "hue-rotate(140deg)")
-                    // cambiar el click para que borre la ciudad
                 }
             });
 

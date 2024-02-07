@@ -44,7 +44,7 @@ function mostrarCiudades() {
     })
 }
 
-function añadirCiudad(lugar) {
+function añadirCiudad(lugar, marker) {
     switch (true) {
 
         // Comprueba que el local storage existe
@@ -55,8 +55,8 @@ function añadirCiudad(lugar) {
 
         // como existe, compruebo que la ciudad ya está añadida
         case localStorage.getItem("lugares").includes(lugar):
-            // mando un mensaje de que ya se está mostrando
-            alert(lugar + " ya se está mostrando");
+            marker._icon.classList.remove("seleccionado")
+            quitarCiudad(lugar)
             break
 
         // existe, pero la ciudad no está añadida
@@ -65,4 +65,16 @@ function añadirCiudad(lugar) {
             localStorage.setItem("lugares", localStorage.getItem("lugares") + ";" + lugar);
             break
     }
+}
+
+function quitarCiudad(ciudad) {
+    switch (true) {
+        case localStorage.getItem("lugares").includes(ciudad + ";"):
+            localStorage.setItem("lugares", localStorage.getItem("lugares").replace(ciudad + ";", "")); break
+        case localStorage.getItem("lugares").includes(";" + ciudad):
+            localStorage.setItem("lugares", localStorage.getItem("lugares").replace(";" + ciudad, "")); break
+        case localStorage.getItem("lugares").includes(ciudad):
+            localStorage.removeItem("lugares"); break
+    }
+    mostrarCiudades();
 }
