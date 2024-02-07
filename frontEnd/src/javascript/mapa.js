@@ -5,7 +5,7 @@ function cargarMapa() {
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-    fetch('http://localhost:8085/api/recoger')
+    fetch('http://10.10.17.164:8085/api/recoger')
         .then(response => { return response.json() })
         .then(data => {
 

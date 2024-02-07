@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Http\Controllers\LugarController;
+use App\Http\Controllers\HistoricoController;
 class alimentaBBDD extends Command
 {
     /**
@@ -27,6 +28,7 @@ class alimentaBBDD extends Command
     {
         $almacenaLugar = new LugarController();
         $almacenaLugar -> store();
-        
+        $almacenaLugarHistorico = new HistoricoController();
+        $almacenaLugarHistorico -> store();
     }
 }

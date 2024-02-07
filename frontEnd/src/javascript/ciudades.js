@@ -8,7 +8,7 @@ setInterval(() => {
 
 function cargarCiudades() {
     console.log("Cargando ciudades...")
-    fetch("http://localhost:8085/api/recoger")
+    fetch("http://10.10.17.164:8085/api/recoger")
         .then((respuesta) => { return respuesta.json() })
         .then((datos) => {
             lugares = datos.lugares

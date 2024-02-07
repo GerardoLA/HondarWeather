@@ -9,7 +9,9 @@ class Historico extends Model
 {
     use HasFactory;
 
-    protected $table ="historicos";
+    protected $table ="historico_datos";
+
+    public $timestamps = false;
     
     protected $fillable = [
         "nombre",

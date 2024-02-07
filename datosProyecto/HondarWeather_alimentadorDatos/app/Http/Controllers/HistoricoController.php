@@ -33,7 +33,7 @@ class HistoricoController extends Controller
             'Gipuzkoa' =>array(
                 'id' => 20,
                 'municipios' => array(
-                    'Hondarribia' => 20043,
+                    'Hondarribia' => 20036,
                     'Pasaia' => 20064,
                     'Donostia' => 20069,
                     'Getaria' => 20039
@@ -47,7 +47,7 @@ class HistoricoController extends Controller
             )
         );
 
-        foreach($povincias as $provincia =>$provinciaData){
+        foreach($provincias as $provincia =>$provinciaData){
             foreach ($provinciaData['municipios'] as $municipio => $municipioId) {
         
                 $response = Http::get("https://www.el-tiempo.net/api/json/v2/provincias/{$provinciaData['id']}/municipios/{$municipioId}");
