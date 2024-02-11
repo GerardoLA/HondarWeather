@@ -6,11 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="./estilos/styleLoginPropio.css">
+    <script src="src/javascript/ip.js"></script>
 </head>
 
 <body>
+    <!-- Formulario de registro -->
     <form class="form" id="register">
         <h2 class="form_title">Registro</h2>
+        <!-- Si ya esta registrado enlace a "login" -->
         <p class="form_paragraph">¿Ya estás registrado?<a href="index.html" class="form_link">Entra aquí</a></p>
 
         <div class="form_container">
@@ -35,26 +38,29 @@
                 <label for="confirmpassword" class="form_label">Confirma_Password</label>
                 <span class="form_line"></span>
             </div>
-
+            <!-- Botón de envío del formulario-submit -->
             <button type="submit" value="register" class="form_submit">Registrar</button>
 
         </div>
     </form>
             <script>
+                // Obtiene el formulario mediante la id
                 let formRegistrar = document.getElementById('register')
                 formRegistrar.addEventListener('submit', event => {
                     event.preventDefault()
                     //llamada a la funcion
                     register();
                 })
-
+                // Función para hacer hacer el regisro
                 function register() {
+                    // Obtención de datos
                     let data = {
                         name: document.getElementById("nombre").value,
                         email: document.getElementById("email").value,
                         password: document.getElementById("password").value,
                         c_password: document.getElementById("confirmpassword").value
                     }
+                    // Configuración para la solicitud de registro
                     let config = {
                         method: 'POST',
                         headers: {
@@ -62,17 +68,20 @@
                         },
                         body: JSON.stringify(data)
                     }
-
-                    fetch('http://10.10.17.164:8085/api/register',config)
+                    // Realiza la solicitud/fetch de regisro
+                    fetch('http://'+urlActual+':8085/api/register',config)
                         .then(response =>{
+                            // Si la respuest no es ok, si falla, mensaje de error
                             if(!response.ok){
                                 throw new Error("La solicitud de registro no se pudo completar correctamente.");
                             }
-
+                            // Devuelve la respuesta en formato json
                             return response.json();
                         })
                         .then(data =>{
+                            // Almacena el token en el localStorage
                             localStorage.setItem("token",data["data"]["token"]);
+                            // Redirige a la pagina principal
                             window.location.assign("Principal.html");
                         });
                 }

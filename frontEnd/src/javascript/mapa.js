@@ -5,12 +5,11 @@ function cargarMapa() {
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-    fetch('http://10.10.17.164:8085/api/recoger')
+    fetch('http://'+urlActual+':8085/api/recoger')
         .then(response => { return response.json() })
         .then(data => {
 
             let lugares = data.lugares
-            console.log(lugares)
             // Estructura de datos para realizar un seguimiento de los lugares clicados
 
             lugares.forEach(lugar => {
@@ -20,7 +19,7 @@ function cargarMapa() {
                         this._icon.classList.add(lugar.nombre);
                         this._icon.classList.add("seleccionado")
                         añadirCiudad(lugar.nombre, this)
-                        mostrarCiudades()
+                        mostrarCard(lugar.nombre)
                     })
                     .bindTooltip(lugar.nombre, {
                         permanent: false,
@@ -32,7 +31,7 @@ function cargarMapa() {
 
                 //Si la ciudad está registrada al cargar la página cambia el color del marker
                 if (localStorage.getItem("lugares") && localStorage.getItem("lugares").includes(lugar.nombre)) {
-                    $(document.getElementsByClassName(lugar.nombre)[0]).css("filter", "hue-rotate(140deg)")
+                    marker._icon.classList.add("seleccionado")
                 }
             });
 

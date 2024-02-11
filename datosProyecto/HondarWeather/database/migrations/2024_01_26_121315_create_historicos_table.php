@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('historico_datos', function (Blueprint $table) {
-            $table->date('fecha');
+            $table->timestamp('fecha');
             $table->float('temperatura');
             $table->float('humedad');
             $table->string('nombre');

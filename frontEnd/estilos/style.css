@@ -4,6 +4,10 @@ h3{
 .navbar{
     background:linear-gradient(to left,rgb(44,132, 203),rgb(19, 39, 54));
 }
+h2{
+    color: white;
+    font-family: 'Almarai', sans-serif; /*Google font*/
+}
 .nav-link{
     color: white;
 }
@@ -41,9 +45,13 @@ h3{
   
 }
 .card{
+    display: block;
     box-shadow: 5px 5px 10px 1px rgba(5, 5, 10, 0.6) ;  
     margin: 2%;
     width: 290px;
+}
+.card-title{
+    text-align: center;
 }
 
 img{
@@ -51,4 +59,23 @@ img{
 }
 .seleccionado{
     filter: hue-rotate(140deg);
+}
+#grafico{
+    width: 300px;
+    height: 400px;
+}
+#myChart{
+    margin: auto;
+}
+/*Media queries para modo oscuro en tamaño tablet y movil*/
+@media screen and (max-width: 768px) {
+    /* Dispositivos móviles y tablets */
+    body {
+        background-color: #333; /* Color de fondo oscuro */
+        color: white; /* Texto en color blanco */
+    
+    }
+    p.card-text, h5.card-title{ 
+        color:black;/*Para que se vean con el fondo blanco,letra negra*/
+    }
 }

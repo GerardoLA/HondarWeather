@@ -31,6 +31,10 @@ services:
       - DB_DATABASE=Proyecto
     volumes:
       - './datosProyecto/HondarWeather:/app'
+    command: ["sh", "-c", "php artisan migrate && php artisan passport:install --force && php artisan serve --host=0.0.0.0"]
+    depends_on:
+      mysql:
+            condition: service_healthy
      
      
   HondarWeather_alimentadorDatos:
@@ -46,6 +50,9 @@ services:
     volumes:
       - './datosProyecto/HondarWeather_alimentadorDatos:/app'
     command: ["php", "artisan", "schedule:work"]
+    depends_on:
+      mysql:
+            condition: service_healthy
   mysql:
     image: mysql:latest
     environment:
@@ -59,6 +66,12 @@ services:
       - '3306'
     volumes:
       - ./datosProyecto/mysql/:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+      timeout: 5s
 
   phpmyadmin:
         image: 'phpmyadmin:latest'

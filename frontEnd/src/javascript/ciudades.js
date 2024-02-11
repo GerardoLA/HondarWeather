@@ -1,51 +1,104 @@
-var lugares = []
+var lugares = [] //Para guardar las localizaciones con sus datos
 
-cargarCiudades()
+cargarCiudades() 
 
 setInterval(() => {
-    cargarCiudades()
-}, 15 * 1000);
+    ActualizarCiudades()
+}, 15000);
 
-function cargarCiudades() {
-    console.log("Cargando ciudades...")
-    fetch("http://10.10.17.164:8085/api/recoger")
+function cargarCiudades() { //Recoge datos de la base para generar las cards
+    fetch("http://" + urlActual + ":8085/api/recoger")
         .then((respuesta) => { return respuesta.json() })
         .then((datos) => {
-            lugares = datos.lugares
+            lugares = datos.lugares 
             mostrarCiudades()
         })
 }
 
-function mostrarCiudades() {
+function ActualizarCiudades() {
+    fetch("http://" + urlActual + ":8085/api/recoger")
+        .then((respuesta) => { return respuesta.json() })
+        .then((datos) => {
+            lugares = datos.lugares
+            actualizarCards()
+        })
+}
+function mostrarCiudades() { //Genera las cards y si esta en el localStorage las muestra 
     const panelMet = document.getElementById('PanelMet');
-    let htmlBuilder = ""
-    console.log("Mostrando ciudades...")
     lugares.forEach((lugar) => {
-
-        if (localStorage.getItem("lugares") && localStorage.getItem("lugares").includes(lugar.nombre)) {
-            htmlBuilder += `
-            <div class="card" id="${lugar.nombre}">
+        let card = document.getElementById(lugar.nombre)
+        if (!card) {
+            let card = document.createElement('div')
+            card.className = 'card'
+            card.id = lugar.nombre
+            card.innerHTML = `
                 <div class="card-body">
                     <h5 class="card-title">${lugar.nombre}</h5>
                     <p class="card-text"><img src="./imagenes/temperatura.png" alt="temperatura">${lugar.temperatura}ºC </p>
                     <p class="card-text"><img src="./imagenes/humedad.png" alt="humedad"> ${lugar.humedad}% </p>
-                    <a href="#" class="btn btn-primary">Botón</a>
+                    
                 </div>
-            </div>
             `;
+            if(localStorage.getItem("lugares") && localStorage.getItem("lugares").includes(lugar.nombre)){
+                card.style.display = 'block'
+            }else{
+                card.style.display = 'none'
+            }
+            panelMet.appendChild(card) //las cards van a existir todas, unas visibles otras no
         }
-
     })
-    panelMet.innerHTML = htmlBuilder
+
+
     lugares.forEach((lugar) => {
+        card = document.getElementById(lugar.nombre)
+        if (card !== null && card.hasAttribute('title')) {
+            card.removeAttribute('title');
+        }
+        predicciones(lugar.nombre)
         if (localStorage.getItem("lugares") && localStorage.getItem("lugares").includes(lugar.nombre)) {
             document.getElementById(lugar.nombre).dataset.cardLugar = lugar.nombre
         }
     })
 }
 
+function mostrarCard(lugar) { //Para mostrar u ocultar las cards
+    let card = document.getElementById(lugar)
+    if(card.style.display == 'block'){
+        card.style.display = 'none'
+    }else{
+        card.style.display = 'block'
+    }
+}
+
+function actualizarCards() {
+    lugares.forEach(lugar => {
+        let card = document.getElementById(lugar.nombre)
+        if (card != null) {
+            let datosMeteorologicos = card.children[0].getElementsByTagName('p')//recoge todas las "p" del card-body
+            for (let dato of datosMeteorologicos) { //Por cada dato de datosMeterologicos
+                let datoMeteorologico = dato.getElementsByTagName('img')[0].alt //DatoMeteorológico se recibe de el alt, texto alternativo de la imagen.
+                switch (datoMeteorologico) { //depende del dato que sea, cambia y pone la imagenn y el dato nuevo actualizado correspondiente.
+                    case 'temperatura':
+                        dato.innerHTML = `<img src="./imagenes/temperatura.png" alt="temperatura"> ${lugar.temperatura} ºC`
+                        break;
+                    case 'humedad':
+                        dato.innerHTML = `<img src="./imagenes/humedad.png" alt="humedad"> ${lugar.humedad} %`
+                        break;
+                    case 'viento':
+                        dato.innerHTML = `<img src="./imagenes/viento.png" alt="viento"> ${lugar.viento} m/s <button onclick="eliminarDrop(this)">Eliminar</button>`
+                        break;
+                    case 'lluvia':
+                        dato.innerHTML = `<img src="./imagenes/lluvia.png" alt="lluvia"> ${lugar.lluvia} mm <button onclick="eliminarDrop(this)">Eliminar</button>`
+                        break;
+                }
+            }
+
+        }
+    });
+}
+//funciones añadir y quitar del LocalStorage
 function añadirCiudad(lugar, marker) {
-    switch (true) {
+    switch (true) { 
 
         // Comprueba que el local storage existe
         case !localStorage.getItem("lugares"):
@@ -78,3 +131,4 @@ function quitarCiudad(ciudad) {
     }
     mostrarCiudades();
 }
+
