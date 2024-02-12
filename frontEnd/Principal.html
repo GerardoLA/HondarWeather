@@ -79,7 +79,7 @@
 
 
   <script>
-    //si token vacio mensaje "invalid credential"  te redirige a index.html(login)
+    //si token vacio o mensaje "invalid credential"  te redirige a index.html(login)
     let token = localStorage.getItem('token') || ""
     if (token == "" || token == '{"message":"Invalid credentials"}') {
       window.location.assign("index.html")
